@@ -3,7 +3,12 @@ const Booking = require('./Booking');
 (async() => {
 
     try {
-        new Booking(2, 9, 6);
+        const options = {
+            numberOfChildren: 1,
+            numberOfInfants: 9, 
+            numberOfAdults: 6,
+        };
+        new Booking(options);
     } catch (err) {
         console.log(err.message);
     }

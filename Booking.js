@@ -10,7 +10,7 @@ const {
 
 class Booking {
 
-    constructor(numberOfChildren, numberOfInfants, numberOfAdults) {
+    constructor({numberOfChildren, numberOfInfants, numberOfAdults}) {
         this._numberOfChildren = numberOfChildren;
         this._numberOfInfants = numberOfInfants;
         this._numberOfAdults = numberOfAdults;
