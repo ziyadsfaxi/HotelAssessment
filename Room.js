@@ -1,7 +1,7 @@
 const {
     MAX_NUMBER_OF_ADULTS,
     MAX_NUMBER_OF_CHILDREN,
-    MAX_NUMBER_OF_INFINTS
+    MAX_NUMBER_OF_INFANTS
 } = require('./config');
 
 class Room {
@@ -27,14 +27,14 @@ class Room {
     }
 
     addInfints(numberOfInfints) {
-        if((this.numberOfInfints + numberOfInfints) > MAX_NUMBER_OF_INFINTS)
+        if((this.numberOfInfints + numberOfInfints) > MAX_NUMBER_OF_INFANTS)
             throw new Error("Infints in room should not excceed 3.");
         
         this.numberOfInfints += numberOfInfints;
     }
 
     verifyNumberOfAdults() {
-        return this.numberOfAdults >= MAX_NUMBER_OF_INFINTS;
+        return this.numberOfAdults >= MAX_NUMBER_OF_INFANTS;
     }
 
 

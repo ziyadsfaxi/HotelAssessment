@@ -4,51 +4,53 @@ const {
     MAX_NUMBER_OF_CHILDREN_AND_ADULTS_PER_BOOKING,
     MAX_NUMBER_OF_ROOMS_PER_BOOKING,
     MAX_NUMBER_OF_ADULTS,
-    MAX_NUMBER_OF_INFINTS,
+    MAX_NUMBER_OF_INFANTS,
     MAX_NUMBER_OF_CHILDREN
 } = require('./config');
 
 class Booking {
 
-    constructor(numberOfChildren, numberOfInfints, numberOfAdults) {
-        this.numberOfChildren = numberOfChildren;
-        this.numberOfInfints = numberOfInfints;
-        this.numberOfAdults = numberOfAdults;
+    constructor(numberOfChildren, numberOfInfants, numberOfAdults) {
+        this._numberOfChildren = numberOfChildren;
+        this._numberOfInfants = numberOfInfants;
+        this._numberOfAdults = numberOfAdults;
         this.rooms = [];
 
+        this.verify();
         
-        const numberOfRoomsBasedOnInfintsAndChildren = this.calcuclateNumberOfRoomsBasedOnInfintsAndChildren();
-        if(numberOfRoomsBasedOnInfintsAndChildren > MAX_NUMBER_OF_ROOMS_PER_BOOKING)
-            throw new Error('Beyond max number of rooms');
+        const numberOfRoomsBasedOnInfantsAndChildren = this.calcuclateNumberOfRoomsBasedOnInfantsAndChildren();
+        if(numberOfRoomsBasedOnInfantsAndChildren > MAX_NUMBER_OF_ROOMS_PER_BOOKING)
+            throw new Error('Number of rooms exceeded, please make a seperate booking.');
 
-        if(numberOfRoomsBasedOnInfintsAndChildren > this.numberOfAdults)
-            throw new Error('No enough adults');
+        if(numberOfRoomsBasedOnInfantsAndChildren > this._numberOfAdults)
+            throw new Error(`Every room must have at least one adult.
+            Rooms Required: ${numberOfRoomsBasedOnInfantsAndChildren}, Adults Provided: ${this._numberOfAdults}`);
         
-        const adultInRoom = this.calculateAdultsInRoom(numberOfRoomsBasedOnInfintsAndChildren);
-        this.calc(adultInRoom);
+        const adultsInRoom = this.calculateAdultsInRoom(numberOfRoomsBasedOnInfantsAndChildren);
+        this.calc(adultsInRoom);
     }
 
     calc(adultPerRoom) {
         while(this.numberOfPeople() > 0) {
             const room = new Room();
             let adults = 0;
-            if( adultPerRoom >= this.numberOfAdults) {
-                adults = this.numberOfAdults;
+            if( adultPerRoom >= this._numberOfAdults) {
+                adults = this._numberOfAdults;
             } else {
                 adults = adultPerRoom;
             }
 
             room.addAdults(adults);
-            this.numberOfAdults -= adults;
+            this._numberOfAdults -= adults;
 
 
-            const childeren = this.calculateMaxPersonToAdd(this.numberOfChildren, MAX_NUMBER_OF_CHILDREN);
+            const childeren = this.calculateMaxPersonToAdd(this._numberOfChildren, MAX_NUMBER_OF_CHILDREN);
             room.addChildren(childeren);
-            this.numberOfChildren -= childeren;
+            this._numberOfChildren -= childeren;
             
-            const infints = this.calculateMaxPersonToAdd(this.numberOfInfints, MAX_NUMBER_OF_INFINTS)
+            const infints = this.calculateMaxPersonToAdd(this._numberOfInfants, MAX_NUMBER_OF_INFANTS)
             room.addInfints(infints);
-            this.numberOfInfints -= infints;
+            this._numberOfInfants -= infints;
 
             this.rooms.push(room);
         }
@@ -57,10 +59,10 @@ class Booking {
     }
 
     calculateAdultsInRoom(numberOfRooms){
-        const result = Math.ceil(this.numberOfAdults / numberOfRooms);
+        const result = Math.ceil(this._numberOfAdults / numberOfRooms);
         
         if (result == Infinity) {
-            return this.calculateEstemetatedNumberOfRooms(this.numberOfAdults, MAX_NUMBER_OF_ADULTS);
+            return this.calculateEstemetatedNumberOfRooms(this._numberOfAdults, MAX_NUMBER_OF_ADULTS);
         }
         return result;
     }
@@ -69,10 +71,10 @@ class Booking {
         return Math.ceil(numberOfPeople / maxNumberOfPeople);
     }
 
-    calcuclateNumberOfRoomsBasedOnInfintsAndChildren() {
-        const childeren = this.calculateEstemetatedNumberOfRooms(this.numberOfChildren, MAX_NUMBER_OF_CHILDREN);
-        const infints = this.calculateEstemetatedNumberOfRooms(this.numberOfInfints, MAX_NUMBER_OF_INFINTS);
-        const adults = this.calculateEstemetatedNumberOfRooms(this.numberOfAdults, MAX_NUMBER_OF_ADULTS);
+    calcuclateNumberOfRoomsBasedOnInfantsAndChildren() {
+        const childeren = this.calculateEstemetatedNumberOfRooms(this._numberOfChildren, MAX_NUMBER_OF_CHILDREN);
+        const infints = this.calculateEstemetatedNumberOfRooms(this._numberOfInfants, MAX_NUMBER_OF_INFANTS);
+        const adults = this.calculateEstemetatedNumberOfRooms(this._numberOfAdults, MAX_NUMBER_OF_ADULTS);
 
         return Math.max(childeren, infints, adults);
     }
@@ -83,17 +85,21 @@ class Booking {
 
 
     numberOfPeople() {
-        return this.numberOfChildren + this.numberOfInfints + this.numberOfAdults;
+        return this._numberOfChildren + this._numberOfInfants + this._numberOfAdults;
     }
 
     verify() {
-        if(this.numberOfChildren + this.numberOfAdults > MAX_NUMBER_OF_CHILDREN_AND_ADULTS_PER_BOOKING) 
-            throw new Error('Number of childeren and adults should not be more than 7 for one bookin');
+        const numberOfGuests = this._numberOfChildren + this._numberOfAdults;
+        if(numberOfGuests > MAX_NUMBER_OF_CHILDREN_AND_ADULTS_PER_BOOKING) 
+            throw new Error(
+                `Max number of guests allowed is ${MAX_NUMBER_OF_CHILDREN_AND_ADULTS_PER_BOOKING} (excluding infants).
+                ${numberOfGuests} is provided.`
+            );
 
         if(
-            this.numberOfAdults > (MAX_NUMBER_OF_ADULTS * MAX_NUMBER_OF_ROOMS_PER_BOOKING) ||
-            this.numberOfChildren > (MAX_NUMBER_OF_CHILDREN * MAX_NUMBER_OF_ROOMS_PER_BOOKING) ||
-            this.numberOfInfints > (MAX_NUMBER_OF_INFINTS * MAX_NUMBER_OF_ROOMS_PER_BOOKING) 
+            this._numberOfAdults > (MAX_NUMBER_OF_ADULTS * MAX_NUMBER_OF_ROOMS_PER_BOOKING) ||
+            this._numberOfChildren > (MAX_NUMBER_OF_CHILDREN * MAX_NUMBER_OF_ROOMS_PER_BOOKING) ||
+            this._numberOfInfants > (MAX_NUMBER_OF_INFANTS * MAX_NUMBER_OF_ROOMS_PER_BOOKING) 
         )
             throw new Error(`Cannot fit in ${MAX_NUMBER_OF_ROOMS_PER_BOOKING} Room(s).`);
     }
