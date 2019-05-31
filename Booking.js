@@ -16,7 +16,7 @@ class Booking {
         this._numberOfAdults = numberOfAdults;
         this.rooms = [];
 
-        this.verify();
+        this.verifyBookingRules();
         
         const numberOfRoomsBasedOnInfantsAndChildren = this.calcuclateNumberOfRoomsBasedOnInfantsAndChildren();
         if(numberOfRoomsBasedOnInfantsAndChildren > MAX_NUMBER_OF_ROOMS_PER_BOOKING)
@@ -48,9 +48,9 @@ class Booking {
             room.addChildren(childeren);
             this._numberOfChildren -= childeren;
             
-            const infints = this.calculateMaxPersonToAdd(this._numberOfInfants, MAX_NUMBER_OF_INFANTS)
-            room.addInfints(infints);
-            this._numberOfInfants -= infints;
+            const infants = this.calculateMaxPersonToAdd(this._numberOfInfants, MAX_NUMBER_OF_INFANTS)
+            room.addInfints(infants);
+            this._numberOfInfants -= infants;
 
             this.rooms.push(room);
         }
@@ -88,7 +88,7 @@ class Booking {
         return this._numberOfChildren + this._numberOfInfants + this._numberOfAdults;
     }
 
-    verify() {
+    verifyBookingRules() {
         const numberOfGuests = this._numberOfChildren + this._numberOfAdults;
         if(numberOfGuests > MAX_NUMBER_OF_CHILDREN_AND_ADULTS_PER_BOOKING) 
             throw new Error(
