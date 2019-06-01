@@ -56,7 +56,7 @@ class Booking {
             this._numberOfChildren -= childeren;
             
             const infants = this._calculateMaxPersonToAdd(this._numberOfInfants, MAX_NUMBER_OF_INFANTS)
-            room.addInfints(infants);
+            room.addInfants(infants);
             this._numberOfInfants -= infants;
 
             this._rooms.push(room);

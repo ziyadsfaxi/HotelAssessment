@@ -7,13 +7,17 @@ const {
 class Room {
     constructor() {
         this.numberOfChildren = 0;
-        this.numberOfInfints = 0;
+        this.numberOfInfants = 0;
         this.numberOfAdults = 0;
     }
 
     addAdults(numberOfAdults) {
         if((this.numberOfAdults + numberOfAdults) > MAX_NUMBER_OF_ADULTS)
-            throw new Error('Adults in room should not acceed 3.');
+            throw new Error(`
+                Number of adults exceeded the Max number.
+                Max number: ${MAX_NUMBER_OF_ADULTS}.
+                Provided: ${this.numberOfAdults + numberOfAdults}
+            `);
 
         this.numberOfAdults += numberOfAdults;
     }
@@ -21,22 +25,25 @@ class Room {
     
     addChildren(numberOfChildren) {
         if((this.numberOfChildren + numberOfChildren) > MAX_NUMBER_OF_CHILDREN)
-            throw new Error('Children in room should not excceed 3.');
+            throw new Error(`
+                Number of children exceeded the Max number.
+                Max number: ${MAX_NUMBER_OF_CHILDREN}.
+                Provided: ${this.numberOfChildren + numberOfChildren}
+            `);
         
         this.numberOfChildren += numberOfChildren;
     }
 
-    addInfints(numberOfInfints) {
-        if((this.numberOfInfints + numberOfInfints) > MAX_NUMBER_OF_INFANTS)
-            throw new Error("Infints in room should not excceed 3.");
+    addInfants(numberOfInfants) {
+        if((this.numberOfInfants + numberOfInfants) > MAX_NUMBER_OF_INFANTS)
+            throw new Error(`
+                Number of infants exceeded the Max number.
+                Max number: ${MAX_NUMBER_OF_INFANTS}.
+                Provided: ${this.numberOfInfants + numberOfInfants}
+            `);
         
-        this.numberOfInfints += numberOfInfints;
+        this.numberOfInfants += numberOfInfants;
     }
-
-    verifyNumberOfAdults() {
-        return this.numberOfAdults >= MAX_NUMBER_OF_INFANTS;
-    }
-
 
 }
 
