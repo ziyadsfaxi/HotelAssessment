@@ -10,22 +10,21 @@ const {
 
 class Booking {
 
-    constructor({numberOfChildren, numberOfInfants, numberOfAdults}) {
-        this._numberOfChildren = numberOfChildren;
-        this._numberOfInfants = numberOfInfants;
-        this._numberOfAdults = numberOfAdults;
+    constructor({ numberOfChildren, numberOfInfants, numberOfAdults } = {}) {
+        this._numberOfChildren = numberOfChildren || 0;
+        this._numberOfInfants = numberOfInfants || 0;
+        this._numberOfAdults = numberOfAdults || 0;
         this._rooms = [];
+    }
+
+    async book({ numberOfChildren, numberOfInfants, numberOfAdults } = {}) {
+
+        this._numberOfChildren = numberOfChildren || this._numberOfChildren;
+        this._numberOfInfants = numberOfInfants || this._numberOfInfants;
+        this._numberOfAdults = numberOfAdults || this._numberOfAdults;
 
         this._verifyBookingRules(this._numberOfAdults, this._numberOfChildren, this._numberOfInfants);
-        
-        this._book();
-    }
 
-    getRooms() {
-        return this._rooms;
-    }
-
-    _book() {
         const numberOfRoomsBasedOnInfantsAndChildren = this._calcuclateNumberOfRoomsBasedOnGuestsAndInfants();
         if(numberOfRoomsBasedOnInfantsAndChildren > MAX_NUMBER_OF_ROOMS_PER_BOOKING)
             throw new Error('Number of rooms exceeded, please make a seperate booking.');
@@ -92,6 +91,10 @@ class Booking {
 
     numberOfGuests() {
         return this._numberOfChildren + this._numberOfInfants + this._numberOfAdults;
+    }
+
+    getRooms() {
+        return this._rooms;
     }
 
     _verifyBookingRules(numberOfAdults, numberOfChildren, numberOfInfants) {
